@@ -105,6 +105,30 @@ def clean_and_populate_eovs(field, schema):
 
 
 @scheming_validator
+def clean_and_populate_projects(field, schema):
+
+    def validator(key, data, errors, context):
+
+        keywords_main = data.get(('keyword-project',), {})
+        if keywords_main:
+            project_data = keywords_main.get('en', [])
+        else:
+            extras = data.get(("__extras", ), {})
+            project_data = extras.get('keyword-project-en', '').split(',')
+
+        d = json.loads(data.get(key, '[]'))
+        for x in project_data:
+            if x not in d:
+                d.append(x)
+
+        data[key] = json.dumps(d)
+        return data
+
+    return validator
+
+
+
+@scheming_validator
 def fluent_field_default(field, schema):
 
     def validator(key, data, errors, context):
@@ -273,6 +297,7 @@ class Cioos_ThemePlugin(plugins.SingletonPlugin, DefaultTranslation):
 
         schema.update({
             'ckan.site_title': [ignore_missing, fluent_field_default(None, None), fluent_text(None, None)],
+            'ckan.site_heading': [ignore_missing, fluent_field_default(None, None), fluent_text(None, None)],
             'ckan.site_description': [ignore_missing, fluent_field_default(None, None), fluent_text(None, None)],
             'ckan.site_about': [ignore_missing, fluent_field_default(None, None), fluent_text(None, None)],
             'ckan.site_intro_text': [ignore_missing, fluent_field_default(None, None), fluent_text(None, None)],
@@ -287,6 +312,8 @@ class Cioos_ThemePlugin(plugins.SingletonPlugin, DefaultTranslation):
             'ckan.hide_organization_in_breadcrumb': [ignore_missing, boolean_validator],
             'ckan.hide_organization_in_dataset_sidebar': [ignore_missing, boolean_validator],
             'ckan.show_responsible_organization_in_dataset_sidebar': [ignore_missing, boolean_validator],
+            'ckan.show_language_picker_in_top_bar': [ignore_missing, boolean_validator],
+            'ckan.show_language_picker_in_menu': [ignore_missing, boolean_validator],
         })
         return schema
 
@@ -294,24 +321,12 @@ class Cioos_ThemePlugin(plugins.SingletonPlugin, DefaultTranslation):
         return toolkit.config.get('ckan.cioos.ra_css_path')
 
     def get_helpers(self):
-        """Register the most_popular_groups() function above as a template helper function."""
-        # Template helper function names should begin with the name of the
-        # extension they belong to, to avoid clashing with functions from
-        # other extensions.
         return {
             'cioos_organizations_info_text': lambda: organizations_info_text,
             'cioos_contact_email': lambda: contact_email,
             'cioos_load_json': cioos_helpers.load_json,
             'cioos_geojson_to_bbox': geojson_to_bbox,
-            # 'cioos_most_popular_groups': most_popular_groups,
-            # 'cioos_groups': groups,
-            # 'cioos_most_popular_datasets': most_popular_datasets,
-            # 'cioos_most_popular_resources': most_popular_resources,
-            # 'cioos_recent_packages_html': recent_packages_html,
             'cioos_get_facets': cioos_helpers.cioos_get_facets,
-            # 'cioos_get_organization_list': cioos_helpers.get_organization_list,
-            # 'cioos_get_organization_dict': cioos_helpers.get_organization_dict,
-            # 'cioos_get_organization_dict_extra': cioos_helpers.get_organization_dict_extra
             'cioos_get_package_title': cioos_helpers.get_package_title,
             'cioos_get_package_relationships': cioos_helpers.get_package_relationships,
             'cioos_print_package_relationship_type': cioos_helpers.print_package_relationship_type,
@@ -326,13 +341,15 @@ class Cioos_ThemePlugin(plugins.SingletonPlugin, DefaultTranslation):
             'cioos_get_doi_prefix': cioos_helpers.get_doi_prefix,
             'cioos_get_datacite_org': cioos_helpers.get_datacite_org,
             'cioos_get_datacite_test_mode': cioos_helpers.get_datacite_test_mode,
-            'cioos_helper_available': cioos_helpers.helper_available
+            'cioos_helper_available': cioos_helpers.helper_available,
+            'cioos_group_contacts': self.group_by_ind_or_org
         }
 
     def get_validators(self):
         return {
             # 'cioos_if_empty_same_as__extras': if_empty_same_as__extras,
             'cioos_clean_and_populate_eovs': clean_and_populate_eovs,
+            'cioos_clean_and_populate_projects': clean_and_populate_projects,
             'cioos_fluent_field_default': fluent_field_default,
             'cioos_url_validator_with_port': url_validator_with_port,
             'cioos_tag_name_validator': cioos_tag_name_validator,
@@ -542,7 +559,6 @@ class Cioos_ThemePlugin(plugins.SingletonPlugin, DefaultTranslation):
 
         return data_dict
 
-
     # group a list of dictionaries based on individual-name or organization-name keys
     def group_by_ind_or_org(self, dict_list):
         from collections import defaultdict
@@ -551,7 +567,7 @@ class Cioos_ThemePlugin(plugins.SingletonPlugin, DefaultTranslation):
         dict_out = {}
 
         for d in dict_list:
-            group_value = d.get('individual-name') or d.get('organisation-name')
+            group_value = d.get('individual-name', '') + '_' + d.get('organisation-name', '')
             if not dict_out.get(group_value):
                 dict_out[group_value] = defaultdict(list)
             for key, value in d.items():
@@ -560,7 +576,7 @@ class Cioos_ThemePlugin(plugins.SingletonPlugin, DefaultTranslation):
                 else:
                     dict_out[group_value][key].append(value)
         for d in dict_list:
-            group_value = d.get('individual-name') or d.get('organisation-name')
+            group_value = d.get('individual-name', '') + '_' + d.get('organisation-name', '')
             dict_out[group_value] = dict(dict_out[group_value])
 
         for k1, v1 in dict_out.items():
