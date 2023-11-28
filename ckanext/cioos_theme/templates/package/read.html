@@ -75,10 +75,6 @@
     {% snippet "package/snippets/resources_list.html", pkg=pkg, resources=pkg.resources %}
   {% endblock %}
 
-  {% block package_dates %}
-    {% snippet "package/snippets/dates.html", pkg_dict=pkg %}
-  {% endblock %}
-
   {#
   {% block package_citation %}
     {% if pkg.citation %}
@@ -107,6 +103,10 @@
   {% if dataset_extent %}
     {% snippet "spatial/snippets/dataset_map.html", extent=dataset_extent, max_zoom=h.spatial_get_map_initial_max_zoom(pkg) %}
   {% endif %}
+
+  {% block package_dates %}
+    {% snippet "package/snippets/dates.html", pkg_dict=pkg %}
+  {% endblock %}
 
   {% block package_metadata_source %}
     {% snippet "package/snippets/metadata_source.html", pkg_dict=pkg %}

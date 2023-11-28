@@ -572,8 +572,7 @@ class Cioos_ThemePlugin(plugins.SingletonPlugin, DefaultTranslation):
             if not hide_organization_in_dataset_sidebar:
                 facets_dict['organization' + '_' + self.lang()] = toolkit._('Organization')
             facets_dict['harvest_source_title'] = toolkit._('Metadata Harvested From')
-            facets_dict['tags' + '_' + self.lang()] = toolkit._('Tags')           
-            facets_dict['projects'] = toolkit._('Projects')
+            facets_dict['tags' + '_' + self.lang()] = toolkit._('Tags')
             facets_dict['resource-type'] = toolkit._('Resource Type')
             
             # add any facets we may have missed
