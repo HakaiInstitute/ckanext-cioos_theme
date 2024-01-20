@@ -844,6 +844,21 @@ class Cioos_ThemePlugin(plugins.SingletonPlugin, DefaultTranslation):
         # {'René MANGA_Agence Mamu Innu Kaikusseht (AMIK)': {...
         for d in dict_list:
             group_value = d.get('individual-name', '') + '_' + d.get('organisation-name', '')
+            cior_list = []
+            # TODO This is a terible hack. there must be a better way
+            for cior in dict_out[group_value]['contact-info_online-resource']:
+                try:
+                    cior_list.append(cioos_helpers.load_json(cior)['url'])
+                except:
+                    pass
+            dict_out[group_value]['contact-info_online-resource'] = cior_list
+
+            try:
+                dict_out[group_value]['contact-info_email'] = [', '.join(
+                        dict_out[group_value]['contact-info_email'])]
+            except:
+                pass                
+            
             dict_out[group_value] = dict(dict_out[group_value])
 
         # remove duplicate entries in value lists and convert to strings if only one value remaining
