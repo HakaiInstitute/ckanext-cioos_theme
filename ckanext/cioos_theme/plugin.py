@@ -854,6 +854,9 @@ class Cioos_ThemePlugin(plugins.SingletonPlugin, DefaultTranslation):
             dict_out[group_value]['contact-info_online-resource'] = cior_list
 
             try:
+                # remove duplicate emails
+                dict_out[group_value]['contact-info_email'] = list(set(dict_out[group_value]['contact-info_email']))
+                # join into one string
                 dict_out[group_value]['contact-info_email'] = [', '.join(
                         dict_out[group_value]['contact-info_email'])]
             except:
