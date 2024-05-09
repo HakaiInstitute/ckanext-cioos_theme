@@ -803,6 +803,12 @@ class Cioos_ThemePlugin(plugins.SingletonPlugin, DefaultTranslation):
         if data_dict.get('projects'):
             data_dict['projects'] = cioos_helpers.load_json(data_dict.get('projects'))
 
+        if data_dict.get('mapp-sub-region'):
+            data_dict['mapp-sub-region'] = cioos_helpers.load_json(data_dict.get('mapp-sub-region'))
+
+        if data_dict.get('mapp-project'):
+            data_dict['mapp-project'] = cioos_helpers.load_json(data_dict.get('mapp-project'))            
+
         return data_dict
 
     # group a list of dictionaries based on individual-name or organization-name keys
