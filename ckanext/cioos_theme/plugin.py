@@ -717,43 +717,47 @@ class Cioos_ThemePlugin(plugins.SingletonPlugin, DefaultTranslation):
             data_dict['keywords_translation_method_en'] = ktm_dict.get('en', [])
             data_dict['keywords_translation_method_fr'] = ktm_dict.get('fr', [])
     
-            # split xml in harvest_document_content into french and englsih fields for indexing
-            hdc = data_dict.get('harvest_document_content')
-            if hdc:
-                try:
-                    namespaces = {'lan': 'http://standards.iso.org/iso/19115/-3/lan/1.0',
-                                'mdb': 'http://standards.iso.org/iso/19115/-3/mdb/2.0',
-                                'gmd': 'http://www.isotc211.org/2005/gmd'}
+            # Remove harvest_document_content key as we are no longer indexing it
+            data_dict.pop("harvest_document_content", None)
+            data_dict.pop("extras_harvest_document_content",None)
 
-                    root = ET.fromstring(hdc)
+            # # split xml in harvest_document_content into french and englsih fields for indexing
+            # hdc = data_dict.get('harvest_document_content')
+            # if hdc:
+            #     try:
+            #         namespaces = {'lan': 'http://standards.iso.org/iso/19115/-3/lan/1.0',
+            #                     'mdb': 'http://standards.iso.org/iso/19115/-3/mdb/2.0',
+            #                     'gmd': 'http://www.isotc211.org/2005/gmd'}
 
-                    default_lang = root.xpath(
-                        "./mdb:defaultLocale/lan:PT_Locale/lan:language/lan:LanguageCode/@codeListValue|./gmd:language/gmd:LanguageCode/@codeListValue", namespaces=namespaces)
-                    if default_lang:
-                        default_lang = default_lang[0]
+            #         root = ET.fromstring(hdc)
 
-                    root_fr = ET.Element("fr")
-                    root_en = ET.Element("en")
-                    if default_lang in ["eng", "en"]:
-                        for locale in root.xpath(".//lan:LocalisedCharacterString[@locale='#fr' or @locale='#FR']|.//gmd:LocalisedCharacterString[@locale='#fr' or @locale='#FR']", namespaces=namespaces):
-                            root_fr.append(deepcopy(locale))
-                            locale.getparent().remove(locale)
-                        root_en = deepcopy(root)
-                    elif default_lang in ["fra", "fr"]:
-                        for locale in root.xpath(".//lan:LocalisedCharacterString[@locale='#en' or @locale='#EN']|.//gmd:LocalisedCharacterString[@locale='#en' or @locale='#EN']", namespaces=namespaces):
-                            root_en.append(deepcopy(locale))
-                            locale.getparent().remove(locale)
-                        root_fr = deepcopy(root)
-                    else:
-                        log.error(
-                            'No default language set in xml document. can not split document into language fields')
+            #         default_lang = root.xpath(
+            #             "./mdb:defaultLocale/lan:PT_Locale/lan:language/lan:LanguageCode/@codeListValue|./gmd:language/gmd:LanguageCode/@codeListValue", namespaces=namespaces)
+            #         if default_lang:
+            #             default_lang = default_lang[0]
 
-                    data_dict['harvest_document_content_en'] = ET.strip_tags(
-                        root_en, '*', '*')
-                    data_dict['harvest_document_content_fr'] = ET.strip_tags(
-                        root_fr, '*', '*')
-                except ET.XMLSyntaxError as err:
-                    log.error(err)
+            #         root_fr = ET.Element("fr")
+            #         root_en = ET.Element("en")
+            #         if default_lang in ["eng", "en"]:
+            #             for locale in root.xpath(".//lan:LocalisedCharacterString[@locale='#fr' or @locale='#FR']|.//gmd:LocalisedCharacterString[@locale='#fr' or @locale='#FR']", namespaces=namespaces):
+            #                 root_fr.append(deepcopy(locale))
+            #                 locale.getparent().remove(locale)
+            #             root_en = deepcopy(root)
+            #         elif default_lang in ["fra", "fr"]:
+            #             for locale in root.xpath(".//lan:LocalisedCharacterString[@locale='#en' or @locale='#EN']|.//gmd:LocalisedCharacterString[@locale='#en' or @locale='#EN']", namespaces=namespaces):
+            #                 root_en.append(deepcopy(locale))
+            #                 locale.getparent().remove(locale)
+            #             root_fr = deepcopy(root)
+            #         else:
+            #             log.error(
+            #                 'No default language set in xml document. can not split document into language fields')
+
+            #         data_dict['harvest_document_content_en'] = ET.strip_tags(
+            #             root_en, '*', '*')
+            #         data_dict['harvest_document_content_fr'] = ET.strip_tags(
+            #             root_fr, '*', '*')
+            #     except ET.XMLSyntaxError as err:
+            #         log.error(err)
 
             # update organization list by language
             org_id = data_dict.get('owner_org')
@@ -831,13 +835,22 @@ class Cioos_ThemePlugin(plugins.SingletonPlugin, DefaultTranslation):
                 if(vertical_extent_max):
                     data_dict['vertical-extent-max'] = vertical_extent_max
 
-            # eov is multi select so it is a json list rather then a python list
-            if(data_dict.get('eov')):
-                data_dict['eov'] = cioos_helpers.load_json(data_dict['eov'])
-
-            # ecv is multi select so it is a json list rather then a python list
-            if(data_dict.get('ecv')):
-                data_dict['ecv'] = cioos_helpers.load_json(data_dict['ecv'])
+            # repeating_subfields, multi-selects, and multi-text
+            for subfield in ['dataset-reference-date', 
+                             'metadata-reference-date', 
+                             'included_in_data_catalogue', 
+                             'metadata-point-of-contact', 
+                             'cited-responsible-party', 
+                             'distributor', 
+                             'lineage',
+                             'datacentre',
+                             'eov',
+                             'ecv',
+                             'projects',
+                             'topic-category']:
+                if(data_dict.get(subfield)):
+                    data_dict[subfield] = cioos_helpers.load_json(
+                        data_dict[subfield])
 
             for res in data_dict.get('resources', []):
                 res_name = cioos_helpers.load_json(res.get('name', '{}'))
@@ -847,8 +860,6 @@ class Cioos_ThemePlugin(plugins.SingletonPlugin, DefaultTranslation):
                 if resource_description and isinstance(resource_description, dict) and not res.get('description_translated'):
                     res['description_translated'] = resource_description
 
-            if data_dict.get('projects'):
-                data_dict['projects'] = cioos_helpers.load_json(data_dict.get('projects'))
         except Exception as e:
             log.exception(e)
             raise e
@@ -1167,11 +1178,11 @@ class Cioos_ThemePlugin(plugins.SingletonPlugin, DefaultTranslation):
     # add organization extras to organization object in package.
     # this will make the show and search endpoints look the same
     def after_show(self, context, package_dict):
-        if toolkit.request and toolkit.request.path.startswith('/dataset/'):
-            try:
-                del package_dict['harvest_document_content']
-            except:
-                pass
+        # if toolkit.request and toolkit.request.path.startswith('/dataset/'):
+        #     try:
+        #         del package_dict['harvest_document_content']
+        #     except:
+        #         pass
         
         org_id = package_dict.get('owner_org')
         data_type = package_dict.get('type')
