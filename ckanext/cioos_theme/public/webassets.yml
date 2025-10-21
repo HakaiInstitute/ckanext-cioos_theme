@@ -26,3 +26,9 @@ truncate_js:
       - vendor/jquery
   contents:
     - js/modules/truncate.js
+
+turnstile:
+  filter: rjsmin
+  output: ckanext-cioos_theme/%(version)s_turnstile.js
+  contents:
+    - js/turnstyle.js

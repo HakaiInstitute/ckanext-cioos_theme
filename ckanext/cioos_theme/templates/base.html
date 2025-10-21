@@ -64,12 +64,12 @@
     {%- block page %}{% endblock -%}
 
     {%- block scripts %}
+      {% asset 'ckanext-cioos_theme/turnstile' %}
     {% endblock -%}
     {% block body_extras -%}
       {# defined in the config.ini under "ckan.template_footer_end" #}
       {{ g.template_footer_end | safe }}
     {%- endblock %}
-
     {# render all assets included in scripts block and everywhere else #}
     {# make sure there are no calls to `asset` tag after this point #}
     {{ h.render_assets('style') }}
