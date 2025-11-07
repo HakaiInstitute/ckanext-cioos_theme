@@ -86,6 +86,11 @@ homepage h3 {
     text-align: center;
 }
 
+.relationships .relationship-list {
+    display: grid;
+    overflow: hidden;
+}
+
 .label-clear-100 {
     border: 1px #333333 solid;
     color: #333333;

@@ -1459,61 +1459,61 @@ section{
     height: fit-content;
 }
 
+.relationships {
+  .relationship-list {
+    display: grid;
+    overflow: hidden;
+  }
+
+  .relationship-item {
+    padding: 0px;
 
 
-.relationship-list {
-  display: grid;
-}
+    .label-clear-100 {
+        color: #000;
+        border: 1px solid #ddd;
+        border-radius: 12px;
+        font-size: 12px;
+      }
 
-.relationship-item {
-  padding: 0px;
-
-
-  .label-clear-100 {
-      color: #000;
-      border: 1px solid #ddd;
-      border-radius: 12px;
-      font-size: 12px;
+    .relationship-item-link {
+      padding: 10px;
+      text-decoration: none;
     }
 
-  .relationship-item-link {
-    padding: 10px;
-    text-decoration: none;
+    .list-group-item-body {
+      padding: 0px;
+    }
+
+    .heading,
+    .description {
+      color: #000;
+      padding: 0;
+    }
+
+    .heading {
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .description {
+      font-size: 12px;
+      font-weight: normal;
+      padding-top: 5px;
+      margin-bottom: 0;
+      padding-left: 10px;
+    }
+
+    .align-content-center {
+      display: flex;
+      justify-content: center;
+    }
   }
 
-  .list-group-item-body {
-    padding: 0px;
-  }
-
-  .heading,
-  .description {
-    color: #000;
-    padding: 0;
-  }
-
-  .heading {
-    font-size: 14px;
-    font-weight: bold;
-  }
-
-  .description {
-    font-size: 12px;
-    font-weight: normal;
-    padding-top: 5px;
-    margin-bottom: 0;
-    padding-left: 10px;
-  }
-
-  .align-content-center {
-    display: flex;
-    justify-content: center;
+  .relationship-item:hover {
+    background-color: #eee;
   }
 }
-
-.relationship-item:hover {
-  background-color: #eee;
-}
-
 .id_span {
   word-break: break-all;
 }
