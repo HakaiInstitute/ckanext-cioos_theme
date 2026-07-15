@@ -373,3 +373,15 @@ padding-right:0px;
     max-height: 60px;
     /* width: 100%; */
 }
+
+.badge-info {
+    color: #fff;
+    background-color: #17a2b8;
+}
+
+.badge-new {
+    background-color: transparent;
+    color: #aa2025;
+    outline: 1px solid;
+    margin-left: 5px;
+}

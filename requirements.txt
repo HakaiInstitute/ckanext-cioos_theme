@@ -1,2 +1,2 @@
-pyld
+pyld==1.0.1
 jsonpickle
