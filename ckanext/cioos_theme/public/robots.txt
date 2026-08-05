@@ -1,3 +1,5 @@
+Crawl-Delay: 1
+
 User-Agent: *
 Disallow: /dataset*?
 Disallow: /organization*?
@@ -8,6 +10,8 @@ Disallow: /dataset/*/history
 Disallow: /api/
 Disallow: /harvest
 Disallow: /_tracking
+Disallow: /dataset/*/resource
+Disallow: /dataset/activity
 Disallow: /resorg*
 
 Disallow: /en/dataset*?
@@ -18,6 +22,8 @@ Disallow: /en/revision/
 Disallow: /en/dataset/*/history
 Disallow: /en/api/
 Disallow: /en/harvest
+Disallow: /en/dataset/*/resource
+Disallow: /en/dataset/activity
 Disallow: /en/resorg*
 
 Disallow: /fr/dataset*?
@@ -28,6 +34,8 @@ Disallow: /fr/revision/
 Disallow: /fr/dataset/*/history
 Disallow: /fr/api/
 Disallow: /fr/harvest
+Disallow: /fr/dataset/*/resource
+Disallow: /fr/dataset/activity
 Disallow: /fr/resorg*
 
 Disallow: /erddap*?
@@ -40,4 +48,3 @@ Disallow: /*.iso19115
 Disallow: /*.iso19139
 
 Sitemap: /sitemap/sitemap.xml
-Crawl-Delay: 10

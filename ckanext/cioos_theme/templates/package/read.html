@@ -163,6 +163,8 @@
                               action='action', ver=3, id=pkg.get('name') or pkg.id) }}"><span class="item-label">{{ _('JSON')}}</span></a></li>
           <li class="nav-item"><a href="{{ h.url_for(controller='dataset', action='read', id=pkg.get('name') or pkg.id) }}.basic"><span class="item-label">{{ _('Basic View')}}</span></a></li>
           <li class="nav-item"><a href="{{ h.url_for(controller='dataset', action='read', id=pkg.get('name') or pkg.id) }}"><span class="item-label">{{ _('Show Permalink')}}</span></a></li>
+          <li class="nav-item"><a href='{{pkg.get("maintenance-note","")|replace("Generated from ","")}}'><span class="item-label"></span>{{ _('Form Editor')}}</span><span class="badge badge-info badge-new">New</span></a></li>
+
         </ul>
       </nav>
   </section>
