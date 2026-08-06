@@ -4,9 +4,9 @@
 {% set gns.site_description = h.render_markdown(h.scheming_language_text(h.cioos_load_json(g.site_description))) %}
 
 {% if h.is_url(gns.site_logo) %}
-  {% set logo_url = gns.site_logo %}
+{% set logo_url = gns.site_logo %}
 {% else %}
-  {% set logo_url = h.url_for_static_or_external(gns.site_logo) %}
+{% set logo_url = h.url_for_static_or_external(gns.site_logo) %}
 {% endif %}
 
 <div id="header-container">
@@ -28,9 +28,9 @@
             {% snippet '%s' % g.header_file_name or "/menu/menu_list.html" %}
             <ul class="shareicons">
               {% block mobile_social_list %}
-                {% snippet "menu/social_list.html" %}
+              {% snippet "menu/social_list.html" %}
               {% endblock %}
-              {% if g.show_language_picker_in_menu.lower()|default('', 'true')  == 'true' %}
+              {% if g.show_language_picker_in_menu.lower()|default('', 'true') == 'true' %}
               <li class="lang-item">
                 {%- if h.lang() == 'en' -%}
                 <a href="{% url_for h.current_url(), locale='fr' %}" tabindex="0" aria-label="French/English">FR</a>
@@ -55,18 +55,18 @@
       <nav>
         <ul>
           {% block social_list %}
-            {% snippet "menu/social_list.html" %}
+          {% snippet "menu/social_list.html" %}
           {% endblock %}
-          {% if g.show_language_picker_in_top_bar.lower()|default('', 'true')  == 'true' %}
+          {% if g.show_language_picker_in_top_bar.lower()|default('', 'true') == 'true' %}
           <li id="language_picker">
             {%- if h.lang() == 'en' -%}
-              <a href="{% url_for h.current_url(), locale='fr' %}" tabindex="0" aria-label="French/English">FR</a>
+            <a href="{% url_for h.current_url(), locale='fr' %}" tabindex="0" aria-label="French/English">FR</a>
             {%- else -%}
-              <a href="{% url_for h.current_url(), locale='en' %}" tabindex="0" aria-label="French/English">EN</a>
+            <a href="{% url_for h.current_url(), locale='en' %}" tabindex="0" aria-label="French/English">EN</a>
             {%- endif -%}
           </li>
           {% endif %}
-          </ul>
+        </ul>
       </nav>
       {% endblock %}
     </div>
@@ -82,34 +82,34 @@
       </div>
       <div id="header-links" class="main-navigation">
         <div id="header-links-inner" class="header-links">
-        <ul id="menu-main-menu" class="menu nav-menu desktop-menu">
-          {% snippet '%s' % g.header_file_name or "/menu/menu_list.html" %}
-          {% if g.show_language_picker_in_menu.lower()|default('', 'true')  == 'true' %}
-          <li class="lang-item">
-            {%- if h.lang() == 'en' -%}
-            <a href="{% url_for h.current_url(), locale='fr' %}" tabindex="0" aria-label="French/English">FR</a>
-            {%- else -%}
-            <a href="{% url_for h.current_url(), locale='en' %}" tabindex="0" aria-label="French/English">EN</a>
-            {%- endif -%}
-          </li>
-          {% endif %}
-        </ul>
+          <ul id="menu-main-menu" class="menu nav-menu desktop-menu">
+            {% snippet '%s' % g.header_file_name or "/menu/menu_list.html" %}
+            {% if g.show_language_picker_in_menu.lower()|default('', 'true') == 'true' %}
+            <li class="lang-item">
+              {%- if h.lang() == 'en' -%}
+              <a href="{% url_for h.current_url(), locale='fr' %}" tabindex="0" aria-label="French/English">FR</a>
+              {%- else -%}
+              <a href="{% url_for h.current_url(), locale='en' %}" tabindex="0" aria-label="French/English">EN</a>
+              {%- endif -%}
+            </li>
+            {% endif %}
+          </ul>
         </div>
       </div>
     </div>
   </div>
 
   <script>
-    window.onload = function() {
+    window.onload = function () {
       var pDiv = document.getElementsByClassName('menu-parent');
       for (var i = 0; i < pDiv.length; i++) {
-        pDiv[i].addEventListener('mouseover', function() {
+        pDiv[i].addEventListener('mouseover', function () {
           var cDiv = this.getElementsByClassName('sub-menu');
           for (var j = 0; j < cDiv.length; j++) {
             cDiv[j].classList.add("subshow")
           };
         }, false);
-        pDiv[i].addEventListener('mouseout', function() {
+        pDiv[i].addEventListener('mouseout', function () {
           var cDiv = this.getElementsByClassName('sub-menu');
           for (var j = 0; j < cDiv.length; j++) {
             cDiv[j].classList.remove("subshow")
