@@ -32,7 +32,7 @@ async function turnstileLoad() {
 
     await new Promise((resolve, reject) => {
     turnstile.render('#turnstile_widget', {
-        'sitekey': '0x4AAAAAAB4xlu0mY5PvCeUb',
+        'sitekey': '0x4AAAAAAEJdBg9eZfMxtr4b',
         //'sitekey': '1x00000000000000000000AA',
         'error-callback': function (e) {
             overlay.style.display = 'none';

@@ -131,3 +131,19 @@
     width: auto;
     max-width: 395px;
 }
+
+ .primary .dataset-heading a{
+    font-weight: 700;
+  }
+
+.badge-info {
+    color: #fff;
+    background-color: #17a2b8;
+}
+
+.badge-new {
+    background-color: transparent;
+    color: #aa2025;
+    outline: 1px solid;
+    margin-left: 5px;
+}
